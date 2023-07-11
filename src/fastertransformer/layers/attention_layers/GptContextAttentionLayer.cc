@@ -242,7 +242,14 @@ void GptContextAttentionLayer<T>::forward(TensorMap*                output_tenso
                 param.num_heads          = local_head_num_;
                 param.qk_scale           = qk_scale;
                 param.linear_bias_slopes = const_cast<T*>(linear_bias_slopes);  // (head_num,), optional
-                invokeMaskedSoftmax(param, stream_);
+                
+		std::cout << "invokeMaskedSoftmax, batch_size: " << param.batch_size \
+                          << ", num_heads: " << param.num_heads \
+                          << ", q_length: " << param.q_length \
+                          << ", k_length: " << param.k_length \
+                          << std::endl;
+
+	       	invokeMaskedSoftmax(param, stream_);
                 sync_check_cuda_error();
                 POP_RANGE;
             }
@@ -276,7 +283,14 @@ void GptContextAttentionLayer<T>::forward(TensorMap*                output_tenso
                 param.num_heads          = local_head_num_;
                 param.qk_scale           = qk_scale;
                 param.linear_bias_slopes = const_cast<T*>(linear_bias_slopes);  // (head_num,), optional
-                invokeMaskedSoftmax(param, stream_);
+                
+		std::cout << "invokeMaskedSoftmax, batch_size: " << param.batch_size \
+                          << ", num_heads: " << param.num_heads \
+                          << ", q_length: " << param.q_length \
+                          << ", k_length: " << param.k_length \
+                          << std::endl;
+
+		invokeMaskedSoftmax(param, stream_);
                 sync_check_cuda_error();
                 POP_RANGE;
             }

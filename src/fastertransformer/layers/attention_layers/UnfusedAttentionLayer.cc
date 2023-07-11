@@ -222,6 +222,13 @@ void UnfusedAttentionLayer<T>::forward(TensorMap*                output_tensors,
     param.num_heads          = head_num_;
     param.qk_scale           = 1.0f;
     param.linear_bias_slopes = linear_bias_slopes;  // (head_num,), optional
+    
+    std::cout << "invokeMaskedSoftmax, batch_size: " << param.batch_size \
+                          << ", num_heads: " << param.num_heads \
+                          << ", q_length: " << param.q_length \
+                          << ", k_length: " << param.k_length \
+                          << std::endl;
+
     invokeMaskedSoftmax(param, stream_);
     sync_check_cuda_error();
 

@@ -267,6 +267,10 @@ __global__ void softmax_kernel(T*          attn_score,
     // qk, [batch_size, num_heads, q_length, k_length]
     // attn_mask, [batch_size, q_length, k_length]
     // linear_bias_slopes, [num_heads]
+    
+    printf("In softmax_kernel, unfused_attention_kernels: batch_size: %d, head_num: %d, q_length: %d, k_length: %d\n", batch_size, head_num, q_length, k_length);
+
+    printf("Type: %dB\n", sizeof(*attn_score));
 
     const int64_t bi = blockIdx.y;  // Batch index.
     const int64_t hi = blockIdx.z;  // Head index.

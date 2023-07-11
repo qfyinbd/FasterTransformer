@@ -424,6 +424,8 @@ void ParallelGpt<T>::computeContextCumLogProbs(float*                      cum_l
 
     if (pipeline_para_.rank_ == pipeline_para_.world_size_ - 1) {
         // normed decoder output [batch_size * beam_width, max_input_length, hidden_units_]
+	std::cout << "invokeGeneralLayerNorm, m: " << n_hidden_states << ", n: " << hidden_units_ << std::endl;
+	std::cout << "invokeGeneralLayerNorm size, m: " << sizeof(*lp_normed_decoder_output_buf_) << ", n: " << sizeof(*context_decoder_outputs) << std::endl;
         invokeGeneralLayerNorm(lp_normed_decoder_output_buf_,
                                context_decoder_outputs,
                                gpt_weights->post_decoder_layernorm.gamma,
@@ -1023,7 +1025,9 @@ void ParallelGpt<T>::forward(std::unordered_map<std::string, Tensor>*       outp
 
             if (gpt_variant_params_.has_pre_decoder_layernorm) {
                 PUSH_RANGE("pre-decoder layernorm");
-                invokeGeneralLayerNorm(context_decoder_normed_input_buf_,
+		std::cout << "invokeGeneralLayerNorm, m: " << batch_size * beam_width * max_input_length << ", n: " << hidden_units_ << std::endl;
+                std::cout << "invokeGeneralLayerNorm size, m: " << sizeof(*context_decoder_normed_input_buf_) << ", n: " << sizeof(*context_decoder_input_buf_) << std::endl;
+		invokeGeneralLayerNorm(context_decoder_normed_input_buf_,
                                        context_decoder_input_buf_,
                                        gpt_weights->pre_decoder_layernorm.gamma,
                                        gpt_weights->pre_decoder_layernorm.beta,
@@ -1279,7 +1283,9 @@ void ParallelGpt<T>::forward(std::unordered_map<std::string, Tensor>*       outp
                     sync_check_cuda_error();
 
                     if (gpt_variant_params_.has_pre_decoder_layernorm) {
-                        invokeGeneralLayerNorm(decoder_normed_input_buf_ + hidden_units_offset,
+			std::cout << "invokeGeneralLayerNorm, m: " << batch_size * beam_width << ", n: " << hidden_units_ << std::endl;
+                        std::cout << "invokeGeneralLayerNorm size, m: " << sizeof(*(context_decoder_normed_input_buf_)) << ", n: " << sizeof(*(decoder_input_buf_ + hidden_units_offset)) << std::endl; 
+			invokeGeneralLayerNorm(decoder_normed_input_buf_ + hidden_units_offset,
                                                decoder_input_buf_ + hidden_units_offset,
                                                gpt_weights->pre_decoder_layernorm.gamma,
                                                gpt_weights->pre_decoder_layernorm.beta,

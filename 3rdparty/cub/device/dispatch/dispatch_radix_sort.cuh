@@ -341,6 +341,22 @@ __global__ void DeviceSegmentedRadixSortKernel(
     // Constants
     //
 
+    printf("DeviceSegmentedRadixSortKernel\n");
+    std::cout << "d_keys_in size: " << sizeof(*d_keys_in) << std::endl;
+    std::cout << "d_keys_out size: " << sizeof(*d_keys_out) << std::endl;
+    std::cout << "d_values_in size: " << sizeof(*d_values_in) << std::endl;
+    std::cout << "d_values_out size: " << sizeof(*d_values_out) << std::endl;
+    std::cout << "d_begin_offsets size: " << sizeof(*d_begin_offsets) << std::endl;
+    std::cout << "d_end_offsets size: " << sizeof(*d_end_offsets) << std::endl;
+    // std::cout << "num_segments size: " << sizeof(num_segments) << std::endl;
+    std::cout << "current_bit size: " << sizeof(current_bit) << std::endl;
+    std::cout << "pass_bits size: " << sizeof(pass_bits) << std::endl;
+
+    std::cout << "d_keys_in: " << sizeof(d_keys_in) << std::endl;
+    std::cout << "d_values_in: " << sizeof(d_values_in) << std::endl;
+    std::cout << "current_bit: " << current_bit << std::endl;
+    std::cout << "pass_bits: " << pass_bits << std::endl;
+
     typedef typename If<(ALT_DIGIT_BITS),
         typename ChainedPolicyT::ActivePolicy::AltSegmentedPolicy,
         typename ChainedPolicyT::ActivePolicy::SegmentedPolicy>::Type SegmentedPolicyT;

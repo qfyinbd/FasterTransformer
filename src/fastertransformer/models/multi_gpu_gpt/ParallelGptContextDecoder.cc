@@ -472,7 +472,9 @@ void ParallelGptContextDecoder<T>::forward(
 
             PUSH_RANGE("pre-mha layernorm");
             if (layernorm_type_ == LayerNormType::pre_layernorm) {
-                invokeGeneralLayerNorm(decoder_normed_input_,
+                std::cout << "invokeGeneralLayerNorm, m: " << h_token_num << ", n: " << hidden_units_ << std::endl;
+	        std::cout << "invokeGeneralLayerNorm size, m: " << sizeof(*decoder_normed_input_) << ", n: " << sizeof(*decoder_input) << std::endl;	
+		invokeGeneralLayerNorm(decoder_normed_input_,
                                        decoder_input,
                                        layer_weight->pre_layernorm_weights.gamma,
                                        layer_weight->pre_layernorm_weights.beta,
@@ -598,7 +600,8 @@ void ParallelGptContextDecoder<T>::forward(
             }
 
             if (layernorm_type_ == LayerNormType::pre_layernorm) {
-                invokeGeneralAddBiasResidualPreLayerNorm(
+                std::cout << "invokeGeneralAddBiasResidualPreLayerNorm, m: " << h_token_num << ", n: " << hidden_units_ << std::endl;
+		invokeGeneralAddBiasResidualPreLayerNorm(
                     has_adapters_ ? after_adapter_attn_output_ : self_attn_output_,
                     normed_self_attn_output_,
                     has_adapters_ ? after_adapter_attn_output_ : self_attn_output_,
@@ -619,7 +622,9 @@ void ParallelGptContextDecoder<T>::forward(
                     stream_);
             }
             else if (layernorm_type_ == LayerNormType::post_layernorm) {
-                invokeAddBiasResidualLayerNorm(after_adapter_attn_output_,
+                std::cout << "invokeAddBiasResidualLayerNorm, m: " << h_token_num << ", n: " << hidden_units_ << std::endl;
+		std::cout << "invokeAddBiasResidualLayerNorm m: " << sizeof(*after_adapter_attn_output_) << ", n: " << sizeof(*decoder_input) << std::endl;
+		invokeAddBiasResidualLayerNorm(after_adapter_attn_output_,
                                                decoder_input,
                                                has_adapters_ ?
                                                    layer_weight->after_attention_adapter_weights.output_weight.bias :
@@ -735,7 +740,9 @@ void ParallelGptContextDecoder<T>::forward(
                                           stream_);
                 }
                 else if (layernorm_type_ == LayerNormType::post_layernorm) {
-                    invokeAddBiasResidualLayerNorm(decoder_output,
+		    std::cout << "invokeAddBiasResidualLayerNorm, m: " << h_token_num << ", n: " << hidden_units_ << std::endl;
+    		    std::cout << "invokeAddBiasResidualLayerNorm size, m: " << sizeof(*decoder_output) << ", n: " << sizeof(*after_adapter_attn_output_) << std::endl;                    
+		    invokeAddBiasResidualLayerNorm(decoder_output,
                                                    after_adapter_attn_output_,
                                                    has_adapters_ ?
                                                        layer_weight->after_ffn_adapter_weights.output_weight.bias :
@@ -779,7 +786,9 @@ void ParallelGptContextDecoder<T>::forward(
                                                         hidden_units_,
                                                         moe_k_,
                                                         stream_);
-                    invokeGeneralLayerNorm(decoder_output,
+		    std::cout << "invokeGeneralLayerNorm, m: " << h_token_num << ", n: " << hidden_units_ << std::endl;
+                    std::cout << "invokeGeneralLayerNorm size, m: " << sizeof(*decoder_output) << ", n: " << sizeof(*decoder_output) << std::endl;
+		    invokeGeneralLayerNorm(decoder_output,
                                            decoder_output,
                                            layer_weight->self_attn_layernorm_weights.gamma,
                                            layer_weight->self_attn_layernorm_weights.beta,

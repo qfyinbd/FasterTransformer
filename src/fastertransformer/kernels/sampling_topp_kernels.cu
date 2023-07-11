@@ -650,7 +650,10 @@ void topPPerSegment_dispatch(const TopKPerSegmentContext& context,
                                                                0,
                                                                sizeof(Key_Data_Type) * 8,
                                                                stream);
-        }
+        printf("params.num_segments > 1");
+            printf("DeviceSegmentedRadixSort, num_items: %d, num_segments: %d, gmem_begin_offsets: %d, gmem_end_offsets: %d\n", 
+                    params.num_items, params.num_segments, params.gmem_begin_offsets, params.gmem_end_offsets);
+	}
         else {
             cub::DeviceRadixSort::SortPairsDescending(temp_storage,
                                                       temp_storage_bytes,
@@ -662,7 +665,10 @@ void topPPerSegment_dispatch(const TopKPerSegmentContext& context,
                                                       0,
                                                       sizeof(Key_Data_Type) * 8,
                                                       stream);
-        }
+        printf("params.num_segments == 1");
+            printf("DeviceSegmentedRadixSort, num_items: %d, num_segments: %d, gmem_begin_offsets: %d, gmem_end_offsets: %d\n", 
+                    params.num_items, params.num_segments, params.gmem_begin_offsets, params.gmem_end_offsets);
+	}
         temp_storage_bytes = div_up(temp_storage_bytes, 256) * 256;
         // total active counts
         temp_storage_bytes += div_up(sizeof(int), 256) * 256;

@@ -14,6 +14,7 @@
 
 # $1: TP size
 # $2: PP size
+set -ex
 
 export NVIDIA_TF32_OVERRIDE=0
 tensor_para_size=$1
@@ -31,7 +32,6 @@ all_log="${logdir}/all-log.log"
 
 echo -e "| model size | Batch Size | Input length | Output length | Decode value | Precision | FT latency (ms) |" > $all_log
 echo -e "|:----------:|:----------:|:------------:|:-------------:|:------------:|:---------:|:---------------:|" >> $all_log
-
 cat /proc/cpuinfo > ${logdir}/cpuinfo.txt
 nvidia-smi > ${logdir}/gpuinfo.txt
 
@@ -85,7 +85,7 @@ fi
 tmp_log=${logdir}/batchsize-${request_batch_size}-decode_value-${decode_value}-${input_length}-${request_output_len}-${decode_type}-${decode_value}.log
 
 python ../examples/pytorch/gpt/utils/generate_start_ids.py --max_batch_size ${request_batch_size} --max_input_length ${input_length}
-./bin/gpt_gemm ${request_batch_size} ${beam_width} ${input_length} ${head_num} ${size_per_head} ${inter_size} ${vocab_size} 1 ${tensor_para_size}
+# ./bin/gpt_gemm ${request_batch_size} ${beam_width} ${input_length} ${head_num} ${size_per_head} ${inter_size} ${vocab_size} 1 ${tensor_para_size}
 python ../examples/pytorch/gpt/utils/generate_gpt_config.py \
                                         --max_seq_len 1024 \
                                         --beam_width ${beam_width} \

@@ -185,7 +185,7 @@ void add_bias_residual_layernorm_test(const int m, const int n)
     int         opt_version   = 2;
     T *         input, *output_opt, *output_baseline, *gamma, *beta, *bias;
     T *         normed_output_opt, *normed_output_baseline;
-    deviceMalloc(&input, m * n);
+    deviceMalloc(&input, m * n); 
     deviceMalloc(&output_baseline, m * n);
     deviceMalloc(&output_opt, m * n);
     cudaD2Dcpy(output_opt, output_baseline, m * n);
